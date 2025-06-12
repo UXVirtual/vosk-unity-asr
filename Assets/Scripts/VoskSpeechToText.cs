@@ -20,9 +20,6 @@ public class VoskSpeechToText : MonoBehaviour
     [Tooltip("The Max number of alternatives that will be processed.")]
     public int MaxAlternatives = 3;
 
-    [Tooltip("How long should we record before restarting?")]
-    public float MaxRecordLength = 5;
-
     [Tooltip("Should the recognizer start when the application is launched?")]
     public bool AutoStart = true;
 
@@ -41,23 +38,14 @@ public class VoskSpeechToText : MonoBehaviour
     //TODO: Allow for runtime changes to the recognizer.
     private bool _recognizerReady;
 
-    //Holds all of the audio data until the user stops talking.
-    private readonly List<short> _buffer = new List<short>();
-
     //Called when the the state of the controller changes.
     public Action<string> OnStatusUpdated;
-
-    //Called after the user is done speaking and vosk processes the audio.
-    public Action<string> OnTranscriptionResult;
 
     //The absolute path to the decompressed model folder.
     private string _decompressedModelPath;
 
     //A string that contains the keywords in Json Array format
     private string _grammar = "";
-
-    //Flag that is used to wait for the model file to decompress successfully.
-    private bool _isDecompressing;
 
     //Flag that is used to wait for the the script to start successfully.
     private bool _isInitializing;
@@ -233,7 +221,6 @@ public class VoskSpeechToText : MonoBehaviour
         if (_threadedResultQueue.TryDequeue(out string voiceResult))
         {
             recognizerStatusText.text = voiceResult;
-            // OnTranscriptionResult?.Invoke(voiceResult);
         }
     }
 
