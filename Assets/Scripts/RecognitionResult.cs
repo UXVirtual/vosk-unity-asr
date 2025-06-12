@@ -20,18 +20,14 @@ public class RecognitionResult
             {
                 Phrases[i] = new RecognizedPhrase(alternatives[i].AsObject);
             }
-
-        }
-        else if (resultJson.HasKey(ResultKey))
+        } else if (resultJson.HasKey(ResultKey))
         {
             Phrases = new RecognizedPhrase[] { new RecognizedPhrase(resultJson.AsObject) };
-        }
-        else if (resultJson.HasKey(PartialKey))
+        } else if (resultJson.HasKey(PartialKey))
         {
             Partial = true;
             Phrases = new RecognizedPhrase[] { new RecognizedPhrase() { Text = resultJson[PartialKey] } };
-        }
-        else
+        } else
         {
             Phrases = new[] { new RecognizedPhrase() { } };
         }

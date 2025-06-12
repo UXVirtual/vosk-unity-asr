@@ -1,29 +1,30 @@
 /* * * * *
  * A unity voice processor
  * ------------------------------
- * 
+ *
  * A Unity script for recording and delivering frames of audio for real-time processing
- * 
- * Written by Picovoice 
+ *
+ * Written by Picovoice
  * 2021-02-19
- * 
+ *
  * Apache License
- * 
+ *
  * Copyright (c) 2021 Picovoice
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
- *   
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- *   
+ *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
- * 
+ *
  * * * * */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -168,8 +169,7 @@ public class VoiceProcessor : MonoBehaviour
                 RestartRecording = null;
             };
             StopRecording();
-        }
-        else
+        } else
         {
             CurrentDeviceIndex = deviceIndex;
         }
@@ -181,11 +181,11 @@ public class VoiceProcessor : MonoBehaviour
     /// <param name="sampleRate">Sample rate to record at</param>
     /// <param name="frameSize">Size of audio frames to be delivered</param>
     /// <param name="autoDetect">Should the audio continuously record based on the volume</param>
-    public void StartRecording(int sampleRate = 16000, int frameSize = 512, bool ?autoDetect = null)
+    public void StartRecording(int sampleRate = 16000, int frameSize = 512, bool? autoDetect = null)
     {
         if (autoDetect != null)
         {
-            _autoDetect = (bool) autoDetect;
+            _autoDetect = (bool)autoDetect;
         }
 
         if (IsRecording)
@@ -269,8 +269,7 @@ public class VoiceProcessor : MonoBehaviour
                 // combine to form full frame
                 Buffer.BlockCopy(endClipSamples, 0, sampleBuffer, 0, numSamplesClipEnd);
                 Buffer.BlockCopy(startClipSamples, 0, sampleBuffer, numSamplesClipEnd, numSamplesClipStart);
-            }
-            else
+            } else
             {
                 _audioClip.GetData(sampleBuffer, startReadPos);
             }
@@ -278,9 +277,8 @@ public class VoiceProcessor : MonoBehaviour
             startReadPos = endReadPos % _audioClip.samples;
             if (_autoDetect == false)
             {
-                _transmit =_audioDetected = true;
-            }
-            else
+                _transmit = _audioDetected = true;
+            } else
             {
                 float maxVolume = 0.0f;
 
@@ -294,10 +292,9 @@ public class VoiceProcessor : MonoBehaviour
 
                 if (maxVolume >= _minimumSpeakingSampleValue)
                 {
-                    _transmit= _audioDetected = true;
+                    _transmit = _audioDetected = true;
                     _timeAtSilenceBegan = Time.time;
-                }
-                else
+                } else
                 {
                     _transmit = false;
 
@@ -315,14 +312,13 @@ public class VoiceProcessor : MonoBehaviour
                 short[] pcmBuffer = new short[sampleBuffer.Length];
                 for (int i = 0; i < FrameLength; i++)
                 {
-                    pcmBuffer[i] = (short) Math.Floor(sampleBuffer[i] * short.MaxValue);
+                    pcmBuffer[i] = (short)Math.Floor(sampleBuffer[i] * short.MaxValue);
                 }
 
                 // raise buffer event
                 if (OnFrameCaptured != null && _transmit)
                     OnFrameCaptured.Invoke(pcmBuffer);
-            }
-            else
+            } else
             {
                 if (_didDetect)
                 {

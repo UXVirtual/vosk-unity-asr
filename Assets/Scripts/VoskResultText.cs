@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VoskResultText : MonoBehaviour 
+public class VoskResultText : MonoBehaviour
 {
     public VoskSpeechToText VoskSpeechToText;
     public Text ResultText;
@@ -24,6 +24,7 @@ public class VoskResultText : MonoBehaviour
 
             ResultText.text += result.Phrases[i].Text;
         }
-    	ResultText.text += "\n";
+
+        ResultText.text += "\n";
     }
 }
