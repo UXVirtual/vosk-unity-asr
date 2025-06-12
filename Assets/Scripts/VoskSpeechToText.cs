@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Ionic.Zip;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -174,78 +173,31 @@ public class VoskSpeechToText : MonoBehaviour
     //Decompress the model zip file or return the location of the decompressed files.
     private IEnumerator Decompress()
     {
-        if (!Path.HasExtension(ModelPath)
-            || Directory.Exists(
-                Path.Combine(Application.persistentDataPath, Path.GetFileNameWithoutExtension(ModelPath))))
-        {
-            OnStatusUpdated?.Invoke("Using existing decompressed model.");
-            _decompressedModelPath =
-                Path.Combine(Application.persistentDataPath, Path.GetFileNameWithoutExtension(ModelPath));
-            Debug.Log(_decompressedModelPath);
+        // 事前に解凍済みフォルダをそのまま使用する簡易版
 
+        // 1) StreamingAssets 配下に存在するか確認
+        string streamingPath = Path.Combine(Application.streamingAssetsPath, ModelPath);
+        if (Directory.Exists(streamingPath))
+        {
+            _decompressedModelPath = streamingPath;
+            OnStatusUpdated?.Invoke("Using model from StreamingAssets: " + _decompressedModelPath);
+            Debug.Log(_decompressedModelPath);
             yield break;
         }
 
-        OnStatusUpdated?.Invoke("Decompressing model...");
-        string dataPath = Path.Combine(Application.streamingAssetsPath, ModelPath);
-
-        Stream dataStream;
-        // Read data from the streaming assets path. You cannot access the streaming assets directly on Android.
-        if (dataPath.Contains("://"))
+        // 2) PersistentDataPath (既に展開済みの可能性) を確認
+        string persistentPath = Path.Combine(Application.persistentDataPath, ModelPath);
+        if (Directory.Exists(persistentPath))
         {
-            UnityWebRequest www = UnityWebRequest.Get(dataPath);
-            www.SendWebRequest();
-            while (!www.isDone)
-            {
-                yield return null;
-            }
-
-            dataStream = new MemoryStream(www.downloadHandler.data);
-        }
-        // Read the file directly on valid platforms.
-        else
-        {
-            dataStream = File.OpenRead(dataPath);
+            _decompressedModelPath = persistentPath;
+            OnStatusUpdated?.Invoke("Using model from PersistentDataPath: " + _decompressedModelPath);
+            Debug.Log(_decompressedModelPath);
+            yield break;
         }
 
-        //Read the Zip File
-        var zipFile = ZipFile.Read(dataStream);
-
-        //Listen for the zip file to complete extraction
-        zipFile.ExtractProgress += ZipFileOnExtractProgress;
-
-        //Update status text
-        OnStatusUpdated?.Invoke("Reading Zip file");
-
-        //Start Extraction
-        zipFile.ExtractAll(Application.persistentDataPath);
-
-        //Wait until it's complete
-        while (_isDecompressing == false)
-        {
-            yield return null;
-        }
-
-        //Override path given in ZipFileOnExtractProgress to prevent crash
-        _decompressedModelPath =
-            Path.Combine(Application.persistentDataPath, Path.GetFileNameWithoutExtension(ModelPath));
-
-        //Update status text
-        OnStatusUpdated?.Invoke("Decompressing complete!");
-        //Wait a second in case we need to initialize another object.
-        yield return new WaitForSeconds(1);
-        //Dispose the zipfile reader.
-        zipFile.Dispose();
-    }
-
-    ///The function that is called when the zip file extraction process is updated.
-    private void ZipFileOnExtractProgress(object sender, ExtractProgressEventArgs e)
-    {
-        if (e.EventType == ZipProgressEventType.Extracting_AfterExtractAll)
-        {
-            _isDecompressing = true;
-            _decompressedModelPath = e.ExtractLocation;
-        }
+        // 3) 見つからなければエラー
+        Debug.LogError("Model folder not found: " + streamingPath);
+        yield break;
     }
 
     //Wait until microphones are initialized

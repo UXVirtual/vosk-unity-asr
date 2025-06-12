@@ -725,7 +725,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -763,7 +763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f217616079a9a74489a1ae3cd9178787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ModelPath: vosk-model-small-ja-0.22.zip
+  ModelPath: vosk-model-small-ja-0.22
   VoiceProcessor: {fileID: 1880598648}
   MaxAlternatives: 3
   MaxRecordLength: 5
