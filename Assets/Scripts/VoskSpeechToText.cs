@@ -8,6 +8,7 @@ using TMPro;
 using Unity.Profiling;
 using UnityEngine;
 using Vosk;
+using Newtonsoft.Json;
 
 public class VoskSpeechToText : MonoBehaviour
 {
@@ -149,15 +150,16 @@ public class VoskSpeechToText : MonoBehaviour
             return;
         }
 
-        JSONArray keywords = new JSONArray();
+        var keywords = new List<string>();
         foreach (string keyphrase in KeyPhrases)
         {
-            keywords.Add(new JSONString(keyphrase.ToLower()));
+            keywords.Add(keyphrase.ToLower());
         }
 
-        keywords.Add(new JSONString("[unk]"));
+        // tell vosk to filter other phrases
+        keywords.Add("[unk]");
 
-        _grammar = keywords.ToString();
+        _grammar = JsonConvert.SerializeObject(keywords);
     }
 
     //Decompress the model zip file or return the location of the decompressed files.
