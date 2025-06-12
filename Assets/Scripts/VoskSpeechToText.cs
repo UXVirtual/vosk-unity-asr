@@ -220,7 +220,13 @@ public class VoskSpeechToText : MonoBehaviour
     {
         if (_threadedResultQueue.TryDequeue(out string voiceResult))
         {
-            recognizerStatusText.text = voiceResult;
+            // Parse JSON response and display the highest-confidence phrase (first alternative)
+            var result = new RecognitionResult(voiceResult);
+
+            if (!result.Partial && result.Phrases.Length > 0 && !string.IsNullOrEmpty(result.Phrases[0].Text))
+            {
+                recognizerStatusText.text = result.Phrases[0].Text;
+            }
         }
     }
 
