@@ -70,7 +70,12 @@ public class VoskDialogText : MonoBehaviour
 
 	void Say(string response)
 	{
-		System.Diagnostics.Process.Start("/usr/bin/say", response); 
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+		System.Diagnostics.Process.Start("/usr/bin/say", response);
+#else
+		// macOS 以外では /usr/bin/say が無いのでスキップ
+		Debug.Log($"Say (text-only): {response}");
+#endif
 	}
 
 	void AddFinalResponse(string response) {
