@@ -110,15 +110,15 @@ public class VoiceProcessor : MonoBehaviour
     private bool _transmit;
 
 
-    AudioClip _audioClip;
+    private AudioClip _audioClip;
     private event Action RestartRecording;
 
-    void Awake()
+    private void Awake()
     {
         UpdateDevices();
     }
 #if UNITY_EDITOR
-    void Update()
+    private void Update()
     {
         if (CurrentDeviceIndex != MicrophoneIndex)
         {
@@ -231,7 +231,7 @@ public class VoiceProcessor : MonoBehaviour
     /// <summary>
     /// Loop for buffering incoming audio data and delivering frames
     /// </summary>
-    IEnumerator RecordData()
+    private IEnumerator RecordData()
     {
         float[] sampleBuffer = new float[FrameLength];
         int startReadPos = 0;

@@ -4,9 +4,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using TMPro;
 using Unity.Profiling;
 using UnityEngine;
-using UnityEngine.Networking;
 using Vosk;
 
 public class VoskSpeechToText : MonoBehaviour
@@ -31,6 +31,8 @@ public class VoskSpeechToText : MonoBehaviour
 
     //Cached version of the Vosk Model.
     private Model _model;
+    
+    [SerializeField] private TMP_Text recognizerStatusText;
 
     //Cached version of the Vosk recognizer.
     private VoskRecognizer _recognizer;
@@ -75,11 +77,11 @@ public class VoskSpeechToText : MonoBehaviour
     private readonly ConcurrentQueue<string> _threadedResultQueue = new ConcurrentQueue<string>();
 
 
-    static readonly ProfilerMarker voskRecognizerCreateMarker = new ProfilerMarker("VoskRecognizer.Create");
-    static readonly ProfilerMarker voskRecognizerReadMarker = new ProfilerMarker("VoskRecognizer.AcceptWaveform");
+    private static readonly ProfilerMarker voskRecognizerCreateMarker = new ProfilerMarker("VoskRecognizer.Create");
+    private static readonly ProfilerMarker voskRecognizerReadMarker = new ProfilerMarker("VoskRecognizer.AcceptWaveform");
 
     //If Auto start is enabled, starts vosk speech to text.
-    void Start()
+    private void Start()
     {
         if (AutoStart)
         {
@@ -226,11 +228,12 @@ public class VoskSpeechToText : MonoBehaviour
     }
 
     //Calls the On Phrase Recognized event on the Unity Thread
-    void Update()
+    private void Update()
     {
         if (_threadedResultQueue.TryDequeue(out string voiceResult))
         {
-            OnTranscriptionResult?.Invoke(voiceResult);
+            recognizerStatusText.text = voiceResult;
+            // OnTranscriptionResult?.Invoke(voiceResult);
         }
     }
 
