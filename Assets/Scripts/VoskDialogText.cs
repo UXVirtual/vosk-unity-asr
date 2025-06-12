@@ -78,26 +78,14 @@ public class VoskDialogText : MonoBehaviour
         AddResponse("так, и что дальше");
     }
 
-    void Say(string response)
-    {
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-		System.Diagnostics.Process.Start("/usr/bin/say", response);
-#else
-        // macOS 以外では /usr/bin/say が無いのでスキップ
-        Debug.Log($"Say (text-only): {response}");
-#endif
-    }
-
     void AddFinalResponse(string response)
     {
-        Say(response);
         DialogText.text = response + "\n";
         ResetState();
     }
 
     void AddResponse(string response)
     {
-        Say(response);
         DialogText.text = response + "\n\n";
 
         DialogText.text += "крестьянин " + (man_left ? "слева" : "справа") + "\n";
