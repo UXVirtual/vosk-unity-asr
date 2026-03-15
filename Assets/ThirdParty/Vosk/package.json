@@ -1,6 +1,6 @@
 {
   "name": "com.yousan.vosk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "Vosk Speech Recognition (Unity Binding)",
   "description": "Offline speech recognition powered by Vosk. This package contains the C# bindings and native plugins needed to use Vosk inside Unity.",
   "unity": "2020.3",
