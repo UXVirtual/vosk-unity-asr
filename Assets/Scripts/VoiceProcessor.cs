@@ -188,6 +188,8 @@ public class VoiceProcessor : MonoBehaviour
             _autoDetect = (bool)autoDetect;
         }
 
+        Debug.Log(string.Format("Starting recording with sample rate {0} and frame size {1}", sampleRate, frameSize));
+
         if (IsRecording)
         {
             // if sample rate or frame size have changed, restart recording
@@ -219,6 +221,8 @@ public class VoiceProcessor : MonoBehaviour
     {
         if (!IsRecording)
             return;
+
+        Debug.Log("Stopping recording");
 
         Microphone.End(CurrentDeviceName);
         Destroy(_audioClip);
@@ -267,8 +271,8 @@ public class VoiceProcessor : MonoBehaviour
                 _audioClip.GetData(startClipSamples, 0);
 
                 // combine to form full frame
-                Buffer.BlockCopy(endClipSamples, 0, sampleBuffer, 0, numSamplesClipEnd);
-                Buffer.BlockCopy(startClipSamples, 0, sampleBuffer, numSamplesClipEnd, numSamplesClipStart);
+                Array.Copy(endClipSamples, 0, sampleBuffer, 0, numSamplesClipEnd);
+                Array.Copy(startClipSamples, 0, sampleBuffer, numSamplesClipEnd, numSamplesClipStart);
             } else
             {
                 _audioClip.GetData(sampleBuffer, startReadPos);
@@ -292,21 +296,21 @@ public class VoiceProcessor : MonoBehaviour
 
                 if (maxVolume >= _minimumSpeakingSampleValue)
                 {
-                    _transmit = _audioDetected = true;
+                    _audioDetected = true;
                     _timeAtSilenceBegan = Time.time;
                 } else
                 {
-                    _transmit = false;
-
                     if (_audioDetected && Time.time - _timeAtSilenceBegan > _silenceTimer)
                     {
                         _audioDetected = false;
                     }
                 }
+                _transmit = _audioDetected;
             }
 
             if (_audioDetected)
             {
+                Debug.Log("Audio detected");
                 _didDetect = true;
                 // converts to 16-bit int samples
                 short[] pcmBuffer = new short[sampleBuffer.Length];

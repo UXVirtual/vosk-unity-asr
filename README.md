@@ -7,30 +7,30 @@
 ## Quick Start
 
 1. Clone or download this repository.
-2. **Unity Hub → Open** でプロジェクトを開きます。
-3. Demoシーンを開いて実行します
+2. Open the project via **Unity Hub → Open**.
+3. Open and run the Demo scene.
 
-## Unity Package Manager からの導入
+## Installation via Unity Package Manager
 
-既存プロジェクトに Vosk ライブラリのみを追加したい場合は、以下の手順で Unity Package Manager (UPM) に Git URL を指定してください。
+If you wish to add only the Vosk library to an existing project, please specify the Git URL in the Unity Package Manager (UPM) by following these steps.
 
-1. Unity エディタで `Window > Package Manager` を開く  
-2. `+` ボタン → **Add package from git URL...** を選択  
-3. 次の URL を入力して **Add** を押す
+1. Open `Window > Package Manager` in the Unity editor.
+2. Click the `+` button → select **Add package from git URL...**
+3. Enter the following URL and click **Add**:
 
 ```
 https://github.com/ayutaz/vosk-unity-asr.git?path=Assets/ThirdParty/Vosk
 ```
 
-これによりパッケージ名 `com.yousan.vosk` がインストールされます。依存ライブラリ `com.unity.nuget.newtonsoft-json` (v3.2.1) も自動で解決されます。
+This will install the package `com.yousan.vosk`. The dependency library `com.unity.nuget.newtonsoft-json` (v3.2.1) will also be resolved automatically.
 
-## 内容
+## Contents
 
-- `Assets/Scripts/` : サンプルスクリプト類  
-- `Assets/ThirdParty/Vosk` : Vosk C# バインディング & ネイティブ DLL  
-- `Packages/manifest.json` : Newtonsoft.Json 依存が追加されています
+- `Assets/Scripts/`: Sample scripts
+- `Assets/ThirdParty/Vosk`: Vosk C# bindings and native DLLs
+- `Packages/manifest.json`: Newtonsoft.Json dependency has been added
 
-## 備考
+## Notes
 
-- マイク入力が必要です (Windows の場合はプライバシー設定で本アプリのマイク使用を許可)。
-- 音声合成機能は macOS 専用 `/usr/bin/say` を呼んでいましたが、Windows では無効化しています。
+- Microphone input is required (on Windows, please allow this app to use the microphone in your privacy settings).
+- The speech synthesiser feature previously called the macOS-exclusive `/usr/bin/say`, but it has been disabled for Windows.

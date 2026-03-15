@@ -242,6 +242,15 @@ public class VoskSpeechToText : MonoBehaviour
     private void VoiceProcessorOnOnRecordingStop()
     {
         Debug.Log("Stopped");
+        if (_recognizer != null)
+        {
+            var result = _recognizer.FinalResult();
+            if (!string.IsNullOrEmpty(result))
+            {
+                _threadedResultQueue.Enqueue(result);
+            }
+            _recognizer.Reset();
+        }
     }
 
     //Feeds the autio logic into the vosk recorgnizer
